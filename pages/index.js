@@ -57,7 +57,7 @@ function Title(props){
 }
 
 export default function PaginaInicial() {
-    const username = 'peas';
+    const username = 'PedroHumberto';
   
     return (
       <>
