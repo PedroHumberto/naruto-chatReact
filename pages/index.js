@@ -1,37 +1,11 @@
 import appConfig from '../config.json'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import React from 'react';
+import { useRouter } from 'next/router'
+import Select from 'react-select'
 
 
-function GlobalStyle() {
-    return (
-        <style>{`
 
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                    list-style: none;
-                }
-                body {
-                    font-family: 'Open Sans', sans-serif;
-                }
-                
-                html, body, #__next {
-                    min-height: 100vh;
-                    display: flex;
-                    flex: 1;
-                }
-                #__next {
-                    flex: 1;
-                }
-                #__next > * {
-                    flex: 1;
-                }
-      
-        `}</style>
-    )
-    
-}
 
 
 function Title(props){
@@ -57,11 +31,23 @@ function Title(props){
 }
 
 export default function PaginaInicial() {
-    const username = 'PedroHumberto';
-  
+    // const username = 'PedroHumberto';
+    const [username, setUsername] = React.useState('')
+    const route = useRouter()
+    const villages = [
+      { value: 'Select', label: 'Select your Village'},
+      { value: 'Konohagakure', label: 'Konohagakure' },
+      { value: 'Sunagakure', label: 'Sunagakure' },
+      { value: 'Kumogakure', label: 'Kumogakure' },
+      { value: 'Iwagakure', label: 'Iwagakure' },
+      { value: 'Kirigakure', label: 'Kirigakure' },
+      { value: 'Amegakure', label: 'Amegakure' },
+    ]
+
+
     return (
       <>
-        <GlobalStyle />
+        
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -90,6 +76,12 @@ export default function PaginaInicial() {
             {/* Formulário */}
             <Box
               as="form"
+              onSubmit={function (eventInfo){
+                eventInfo.preventDefault()
+                route.push('/chat')
+                
+                // window.location.href= '/chat'
+              }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -99,9 +91,18 @@ export default function PaginaInicial() {
               <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                 {appConfig.name}
               </Text>
-  
+              
+
+              
+
               <TextField
                 fullWidth
+                value={username}
+                onChange={function Handler(event){
+                    /*event é o estado atual quando digitado*/
+                    const newValue = event.target.value
+                    setUsername(newValue)
+                  }}
                 textFieldColors={{
                   neutral: {
                     textColor: appConfig.theme.colors.neutrals[200],
@@ -111,6 +112,17 @@ export default function PaginaInicial() {
                   },
                 }}
               />
+
+              
+              
+              <Select
+              className="select-list"
+              id="selectbox" 
+              instanceId="selectbox"
+              defaultValue={villages[0]}
+              options={villages} 
+              onChange={village => console.log(village.value)}/>
+
               <Button
                 type='submit'
                 label='Entrar'
