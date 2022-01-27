@@ -2,11 +2,6 @@ import appConfig from '../config.json'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router'
-import Select from 'react-select'
-
-
-
-
 
 function Title(props){
     const Tag = props.tag || 'h1'
@@ -17,32 +12,22 @@ function Title(props){
 
 
             <style jsx>{`
-
                 ${Tag} {
                     color: ${appConfig.theme.colors.neutrals['000']};
                     font-size: 24px;
                     font-weight: 600;
                 }
-
             `}</style>
-
         </>
     )
 }
+
 
 export default function PaginaInicial() {
     // const username = 'PedroHumberto';
     const [username, setUsername] = React.useState('')
     const route = useRouter()
-    const villages = [
-      { value: 'Select', label: 'Select your Village'},
-      { value: 'Konohagakure', label: 'Konohagakure' },
-      { value: 'Sunagakure', label: 'Sunagakure' },
-      { value: 'Kumogakure', label: 'Kumogakure' },
-      { value: 'Iwagakure', label: 'Iwagakure' },
-      { value: 'Kirigakure', label: 'Kirigakure' },
-      { value: 'Amegakure', label: 'Amegakure' },
-    ]
+    const [villages, setVillages] = React.useState('')
 
 
     return (
@@ -112,16 +97,20 @@ export default function PaginaInicial() {
                   },
                 }}
               />
-
+              {/* Usar default value pois o react exige o valor default para elemento select. 
+              Ele possui o proprio elemento Select 'react-select' porem preferi fazer o meu*/}
+              <select 
+                defaultValue={'DEFAULT'} 
+                onChange={village => setVillages(village.target.value)}>
+                <option value="DEFAULT" disabled>Choose your village...</option>
+                <option value="Konohagakure">Konohagakure</option>
+                <option value="Sunagakure">Sunagakure</option>
+                <option value="Kumogakure">Kumogakure</option>
+                <option value="Kirigakure">Kirigakure</option>
+                <option value="Iwagakure">Iwagakure</option>
+              </select>
               
               
-              <Select
-              className="select-list"
-              id="selectbox" 
-              instanceId="selectbox"
-              defaultValue={villages[0]}
-              options={villages} 
-              onChange={village => console.log(village.value)}/>
 
               <Button
                 type='submit'

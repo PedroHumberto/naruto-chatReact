@@ -16,13 +16,13 @@ function GlobalStyle() {
         display: flex;
         flex: 1;
       }
-      .select-list{
-          margin-bottom: 10px;
-          font-size: 15px;
-          
+      select{
+        border-radius: 5px;
+        margin-bottom: 10px;
       }
-      
-
+      select:hover{
+        border-color: orange;
+      }
       #__next {
         flex: 1;
       }
