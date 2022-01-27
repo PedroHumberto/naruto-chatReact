@@ -28,6 +28,8 @@ export default function PaginaInicial() {
     const [username, setUsername] = React.useState('')
     const route = useRouter()
     const [villages, setVillages] = React.useState('')
+    
+    
 
 
     return (
@@ -64,6 +66,7 @@ export default function PaginaInicial() {
               onSubmit={function (eventInfo){
                 eventInfo.preventDefault()
                 route.push('/chat')
+                
                 
                 // window.location.href= '/chat'
               }}
@@ -159,7 +162,9 @@ export default function PaginaInicial() {
                   borderRadius: '1000px'
                 }}
               >
-                {username}
+                
+                <a className='photo-description'> {username} ({villages}) </a> 
+                
               </Text>
             </Box>
             {/* Photo Area */}

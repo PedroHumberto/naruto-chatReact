@@ -23,6 +23,10 @@ function GlobalStyle() {
       select:hover{
         border-color: orange;
       }
+      .photo-description{
+        display: flex;
+        text-align: center;
+      }
       #__next {
         flex: 1;
       }
