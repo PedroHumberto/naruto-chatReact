@@ -1,37 +1,57 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js'
+
+// Como fazer AJAX: https://medium.com/@omariosouto/entendendo-como-fazer-ajax-com-a-fetchapi-977ff20da3c6
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNjExOSwiZXhwIjoxOTU4OTAyMTE5fQ._8Jv70sI5E3r5tDCOK07UxAh-0sZngXUjjlg9p1-pl0'
+const SUPABASE_URL = 'https://vjnfynybrgernfxcirse.supabase.co'
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+/*.from() -> ele passa uma tabela*/
 
 
+// ao passar o mouse em cima da foto do usuario gerar um card
+// mostrando o github, link e foto
 
 export default function ChatPage() {
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
+
+
+    //criar um loading quando executar o useEffect
+    React.useEffect(() => {
+        supabaseClient
+                        .from('messages')
+                        .select('*')
+                        .order('id', { ascending: false })
+                        .then(({ data }) => {
+                            setMessageList(data)
+                        });
+    }, [])
     
 
-    /*
-    // Usuário
-    - Usuário digita no campo textarea
-    - Aperta enter para enviar
-    - Tem que adicionar o texto na listagem
     
-    // Dev
-    - [X] Campo criado
-    - [X] Vamos usar o onChange usa o useState (ter if pra caso seja enter pra limpar a variavel)
-    - [X] Lista de mensagens 
-    */
     function handleNewMessage(newMessage){
         const message = {
             id: messageList.length + 1,
             from: 'PedroHumberto',
             text: newMessage,
+        };
 
-        }
-        //chamada backend
-        setMessageList([
-            message,
-            ...messageList, 
-        ]);
+        supabaseClient
+            .from('messages')
+            .insert([
+            // Tem que ser um objeto com os MESMOS CAMPOS que você escreveu no supabase
+            message
+            ])
+            .then(({ data }) => {
+                console.log('Criando mensagem: ', data);
+                setMessageList([
+                    data[0],
+                    ...messageList,
+                ]);
+            });
         setMessage('');
     }
 
