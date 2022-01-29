@@ -1,4 +1,4 @@
-import { Box, Text, TextField, Image, Button } from '@skynexui/components';
+import { Box, Text, TextField, Image, Button, Icon } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
@@ -10,16 +10,19 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 /*.from() -> ele passa uma tabela*/
 
-
+// Desafios:
+// mostrar a vila selecionada ex: PedroHumberto from Konohagakure
 // ao passar o mouse em cima da foto do usuario gerar um card
 // mostrando o github, link e foto
+// criar um botão de enviar enquete, anexo....
+// criar um loading quando executar o useEffect
 
 export default function ChatPage() {
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
 
 
-    //criar um loading quando executar o useEffect
+    
     React.useEffect(() => {
         supabaseClient
                         .from('messages')
@@ -29,12 +32,10 @@ export default function ChatPage() {
                             setMessageList(data)
                         });
     }, [])
-    
 
-    
     function handleNewMessage(newMessage){
         const message = {
-            id: messageList.length + 1,
+            //id: messageList.length + 1,
             from: 'PedroHumberto',
             text: newMessage,
         };
@@ -54,6 +55,21 @@ export default function ChatPage() {
             });
         setMessage('');
     }
+
+
+    //Function com erro
+    function handDeleteMessage(messageId) {
+        supabaseClient
+            .from('messages')
+            .delete()
+            .match({ id: messageId })
+            .then(({ data }) => {
+                console.log('Esse item ' + messageId)                
+                setMessageList(messageList.filter(function (data) {
+                    return !data.delete
+                  }));
+            } )
+      }
 
     
 
@@ -95,7 +111,7 @@ export default function ChatPage() {
                         padding: '16px',
                     }}
                 >
-                    <MessageList messages={messageList} />
+                    <MessageList messages={messageList} handDeleteMessage={handDeleteMessage} />
                     {/* {listaDeMensagens.map((actualMessage) => {
                         return (
                             <li key={actualMessage.id}>
@@ -232,6 +248,20 @@ function MessageList(props) {
                             >
                                 {(new Date().toLocaleDateString())}
                             </Text>
+                            <Icon 
+                                name={"FaTrash"}
+                                styleSheet={{
+                                        marginLeft: "auto",
+                                        marginRight: ".7rem",
+                                        transition: ".4s ease all",
+                                        cursor: "pointer",
+                                       
+                                    }}
+                                onClick={() => {
+                                message.delete = true;
+                                props.handDeleteMessage(message.id);
+                                }}>
+                            </Icon>
                         </Box>
                         {message.text}
                     </Text>
