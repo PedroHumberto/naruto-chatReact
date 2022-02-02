@@ -2,11 +2,23 @@ import { Box, Text, TextField, Image, Button, Icon } from '@skynexui/components'
 import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/router';
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
 
 // Como fazer AJAX: https://medium.com/@omariosouto/entendendo-como-fazer-ajax-com-a-fetchapi-977ff20da3c6
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNjExOSwiZXhwIjoxOTU4OTAyMTE5fQ._8Jv70sI5E3r5tDCOK07UxAh-0sZngXUjjlg9p1-pl0'
 const SUPABASE_URL = 'https://vjnfynybrgernfxcirse.supabase.co'
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+
+function messagesListener(addMessage){
+    return supabaseClient
+        .from('messages')
+        .on('INSERT', (liveListenner) => {
+            addMessage(liveListenner.new)
+        })
+        .subscribe()
+}
 
 /*.from() -> ele passa uma tabela*/
 
@@ -18,6 +30,8 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 // criar um loading quando executar o useEffect
 
 export default function ChatPage() {
+    const route = useRouter()
+    const logUser = route.query.username
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
 
@@ -25,18 +39,32 @@ export default function ChatPage() {
     
     React.useEffect(() => {
         supabaseClient
-                        .from('messages')
-                        .select('*')
-                        .order('id', { ascending: false })
-                        .then(({ data }) => {
-                            setMessageList(data)
-                        });
+            .from('messages')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                //console.log('useEffect Data: ' + data)
+                setMessageList(data)
+            });
+        messagesListener((newMessage) => {
+            //quando setMessagelist é uma função ele sempre vai retornar
+            //o valor da lista de mensagens atualizado
+            setMessageList((listValue) => {
+                return [
+                    newMessage,
+                    ...listValue,
+                ]
+            });
+
+            //handleNewMessage(newMessage)
+        })
+            
     }, [])
 
     function handleNewMessage(newMessage){
         const message = {
             //id: messageList.length + 1,
-            from: 'PedroHumberto',
+            from: logUser,
             text: newMessage,
         };
 
@@ -47,11 +75,8 @@ export default function ChatPage() {
             message
             ])
             .then(({ data }) => {
-                console.log('Criando mensagem: ', data);
-                setMessageList([
-                    data[0],
-                    ...messageList,
-                ]);
+                console.log('Creating Message ', data);
+               
             });
         setMessage('');
     }
@@ -64,7 +89,7 @@ export default function ChatPage() {
             .delete()
             .match({ id: messageId })
             .then(({ data }) => {
-                console.log('Esse item ' + messageId)                
+                //console.log('Esse item ' + messageId)                
                 setMessageList(messageList.filter(function (data) {
                     return !data.delete
                   }));
@@ -154,6 +179,12 @@ export default function ChatPage() {
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        {/*Callback*/}
+                        <ButtonSendSticker
+                            onStickerClick={(sticker)=> {
+                                handleNewMessage(':sticker: ' + sticker)
+                            }}
+                        />
                         <Button
                             variant='tertiary'
                             colorVariant='neutral'
@@ -192,7 +223,7 @@ function Header() {
 }
 
 function MessageList(props) {
-    console.log(props);
+    //console.log(props);
     
     return (
         <Box
@@ -263,7 +294,21 @@ function MessageList(props) {
                                 }}>
                             </Icon>
                         </Box>
-                        {message.text}
+                        {/*Declarativo*/}
+                        {message.text.startsWith(':sticker:') 
+                        ? (
+                            <Image src={message.text.replace(':sticker:', '')}
+                                styleSheet={{
+                                    maxWidth: '80px'
+                                }}
+                            />
+                        ) 
+                        : (
+                            message.text
+                        ) }
+
+                        
+                        
                     </Text>
                 );
             })}

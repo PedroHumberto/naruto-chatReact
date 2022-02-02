@@ -2,6 +2,7 @@ import appConfig from '../config.json'
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router'
+import Error404 from './404'
 
 function Title(props){
     const Tag = props.tag || 'h1'
@@ -38,7 +39,6 @@ export default function PaginaInicial() {
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            
             backgroundImage: 'url(https://wallpapercave.com/wp/wp4068641.jpg)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
           }}
@@ -65,7 +65,7 @@ export default function PaginaInicial() {
               as="form"
               onSubmit={function (eventInfo){
                 eventInfo.preventDefault()
-                route.push('/chat')
+                route.push(`/chat?username=${username}`)
                 
                 
                 // window.location.href= '/chat'
@@ -126,47 +126,9 @@ export default function PaginaInicial() {
                   mainColorStrong: appConfig.theme.colors.primary[600],
                 }}
               />
+            
             </Box>
-            {/* Formulário */}
-  
-  
-            {/* Photo Area */}
-            <Box
-              styleSheet={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                maxWidth: '200px',
-                padding: '16px',
-                backgroundColor: appConfig.theme.colors.neutrals[800],
-                border: '1px solid',
-                borderColor: appConfig.theme.colors.neutrals[999],
-                borderRadius: '10px',
-                flex: 1,
-                minHeight: '240px',
-              }}
-            >
-              <Image
-                styleSheet={{
-                  borderRadius: '50%',
-                  marginBottom: '16px',
-                }}
-                src={`https://github.com/${username}.png`}
-              />
-              <Text
-                variant="body4"
-                styleSheet={{
-                  color: appConfig.theme.colors.neutrals[200],
-                  backgroundColor: appConfig.theme.colors.neutrals[900],
-                  padding: '3px 10px',
-                  borderRadius: '1000px'
-                }}
-              >
-                
-                <a className='photo-description'> {username} ({villages}) </a> 
-                
-              </Text>
-            </Box>
+                <Error404 Username={username}/>
             {/* Photo Area */}
           </Box>
         </Box>
