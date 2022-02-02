@@ -3,6 +3,7 @@ import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router'
 import Error404 from './404'
+import { setCookie, parseCookies } from 'nookies'
 
 function Title(props){
     const Tag = props.tag || 'h1'
@@ -24,18 +25,18 @@ function Title(props){
 }
 
 
-export default function PaginaInicial() {
+export default function PaginaInicial(props) {
+    //console.log('props iniciais ' , props)
     // const username = 'PedroHumberto';
     const [username, setUsername] = React.useState('')
     const route = useRouter()
-    function storeVillage(key, village){
-      localStorage.setItem(key, village)
-    } 
+    const [village, setVillage] = React.useState(props.VILLAGE)
+    setCookie(null, 'VILLAGE', village, {
+      maxAge: 86400 * 7,
+      path: '/'
+    })
 
-    React.useEffect(() => {
-      storeVillage('ls_village')
-    }, [])
-
+    
     
     
     
@@ -112,7 +113,7 @@ export default function PaginaInicial() {
               Ele possui o proprio elemento Select 'react-select' porem preferi fazer o meu*/}
               <select 
                 defaultValue={'DEFAULT'} 
-                onChange={village => storeVillage('ls_village', village.target.value)}>
+                onChange={village => setVillage(village.target.value)}>
                 <option value="DEFAULT" disabled>Choose your village...</option>
                 <option value="Konohagakure">Konohagakure</option>
                 <option value="Sunagakure">Sunagakure</option>
@@ -156,6 +157,15 @@ function HomePage() {
     )
     
 }
-
-export default HomePage
 */
+export async function getServerSideProps(context){
+  const cookies = parseCookies(context)
+  //console.log('[cookies]', cookies, cookies.VILLAGE)
+  cookies.VILLAGE
+  return{
+    props: {
+      msg: '[Server]',
+      VILLAGE: cookies.VILLAGE 
+    }
+  }
+}

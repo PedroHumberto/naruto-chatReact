@@ -4,6 +4,9 @@ import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/router';
 import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
+import nookies from 'nookies'
+
+
 
 // Como fazer AJAX: https://medium.com/@omariosouto/entendendo-como-fazer-ajax-com-a-fetchapi-977ff20da3c6
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyNjExOSwiZXhwIjoxOTU4OTAyMTE5fQ._8Jv70sI5E3r5tDCOK07UxAh-0sZngXUjjlg9p1-pl0'
@@ -29,12 +32,13 @@ function messagesListener(addMessage){
 // criar um botão de enviar enquete, anexo....
 // criar um metodo melhor de autenticação
 
-export default function ChatPage() {
+export default function ChatPage(props) {
     const route = useRouter()
     const logUser = route.query.username
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
-    const village = localStorage.getItem('ls_village')
+    const [village, setVillage] = React.useState(nookies.get().VILLAGE)
+    
     
 
     
