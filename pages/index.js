@@ -28,7 +28,11 @@ export default function PaginaInicial() {
     // const username = 'PedroHumberto';
     const [username, setUsername] = React.useState('')
     const route = useRouter()
-    const [villages, setVillages] = React.useState('')
+    
+
+    function storeVillage(key, village){
+      localStorage.setItem(key, village)
+    } 
     
     
 
@@ -104,7 +108,7 @@ export default function PaginaInicial() {
               Ele possui o proprio elemento Select 'react-select' porem preferi fazer o meu*/}
               <select 
                 defaultValue={'DEFAULT'} 
-                onChange={village => setVillages(village.target.value)}>
+                onChange={village => storeVillage('ls_village', village.target.value)}>
                 <option value="DEFAULT" disabled>Choose your village...</option>
                 <option value="Konohagakure">Konohagakure</option>
                 <option value="Sunagakure">Sunagakure</option>

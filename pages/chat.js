@@ -11,6 +11,8 @@ const SUPABASE_URL = 'https://vjnfynybrgernfxcirse.supabase.co'
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 
+
+
 function messagesListener(addMessage){
     return supabaseClient
         .from('messages')
@@ -23,19 +25,19 @@ function messagesListener(addMessage){
 /*.from() -> ele passa uma tabela*/
 
 // Desafios:
-// mostrar a vila selecionada ex: PedroHumberto from Konohagakure
-// ao passar o mouse em cima da foto do usuario gerar um card
-// mostrando o github, link e foto
+// ao passar o mouse em cima da foto do usuario gerar um card mostrando o github, link e foto
 // criar um botão de enviar enquete, anexo....
-// criar um loading quando executar o useEffect
+// criar um metodo melhor de autenticação
 
 export default function ChatPage() {
     const route = useRouter()
     const logUser = route.query.username
     const [message, setMessage] = React.useState('');
     const [messageList, setMessageList] = React.useState([]);
+    const village = localStorage.getItem('ls_village')
+    
 
-
+    
     
     React.useEffect(() => {
         supabaseClient
@@ -64,6 +66,7 @@ export default function ChatPage() {
     function handleNewMessage(newMessage){
         const message = {
             //id: messageList.length + 1,
+            village: village,
             from: logUser,
             text: newMessage,
         };
@@ -268,6 +271,9 @@ function MessageList(props) {
                             />
                             <Text tag="strong">
                                 {message.from}
+                            </Text>
+                            <Text>
+                                {' from ' + message.village}
                             </Text>
                             <Text
                                 styleSheet={{
