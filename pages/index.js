@@ -28,11 +28,15 @@ export default function PaginaInicial() {
     // const username = 'PedroHumberto';
     const [username, setUsername] = React.useState('')
     const route = useRouter()
-    
-
     function storeVillage(key, village){
       localStorage.setItem(key, village)
     } 
+
+    React.useEffect(() => {
+      storeVillage('ls_village')
+    }, [])
+
+    
     
     
 
