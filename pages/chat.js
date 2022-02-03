@@ -27,10 +27,11 @@ function messagesListener(addMessage){
 
 /*.from() -> ele passa uma tabela*/
 
-// Desafios:
+// O falta:
 // ao passar o mouse em cima da foto do usuario gerar um card mostrando o github, link e foto
 // criar um botão de enviar enquete, anexo....
 // criar um metodo melhor de autenticação
+// impedir de outros usuarios deletar mensagens que não são deles
 
 export default function ChatPage(props) {
     const route = useRouter()
@@ -61,8 +62,6 @@ export default function ChatPage(props) {
                     ...listValue,
                 ]
             });
-
-            //handleNewMessage(newMessage)
         })
             
     }, [])
@@ -79,7 +78,7 @@ export default function ChatPage(props) {
             .from('messages')
             .insert([
             // Tem que ser um objeto com os MESMOS CAMPOS que você escreveu no supabase
-            message
+                message
             ])
             .then(({ data }) => {
                 console.log('Creating Message ', data);
@@ -89,7 +88,7 @@ export default function ChatPage(props) {
     }
 
 
-    //Function com erro
+    
     function handDeleteMessage(messageId) {
         supabaseClient
             .from('messages')
