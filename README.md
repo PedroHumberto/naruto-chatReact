@@ -2,7 +2,7 @@
 
 Um simples chat em tempo real feito durante a imersão react da escola Alura com algumas alterações realizadas por mim
 
-<img src="./img/Intro.jpeg" width="300px">
+<img src="./img/Intro.jpeg" width="500px">
 
 ---
 
