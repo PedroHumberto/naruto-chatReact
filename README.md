@@ -9,6 +9,7 @@ Um simples chat em tempo real feito durante a imersão react da escola Alura com
 Bibliotecas:
 
 [Nookies](https://github.com/maticzav/nookies)
+
 [Skynexui](https://github.com/skynexui/components)
 
 ---
