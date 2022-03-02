@@ -1,5 +1,5 @@
 import appConfig from '../config.json'
-import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import { Box, Button, Text, TextField } from '@skynexui/components';
 import React from 'react';
 import { useRouter } from 'next/router'
 import Error404 from './404'
